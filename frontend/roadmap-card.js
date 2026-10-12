@@ -1,10 +1,5 @@
-// json-server가 떠 있는 로컬 서버 주소 (추천 자격증 로드맵 카드 전용)
-const rcIsLocalhost =
-  window.location.hostname === "localhost" ||
-  window.location.hostname === "127.0.0.1";
-const sfRmApiBaseUrl = rcIsLocalhost
-  ? "http://localhost:3000"
-  : "https://miniproject-ijxt.onrender.com";
+// 직무 카드·직무 상세처럼 바뀌지 않는 데이터는 frontend/data 폴더의 JSON 파일에서 바로 읽어옴
+const sfRmApiBaseUrl = "./data";
 
 document.addEventListener("DOMContentLoaded", () => {
   sfRmInitRoadmapCard();
@@ -26,7 +21,7 @@ async function sfRmInitRoadmapCard() {
 
   try {
     // URL의 ?id=dev 같은 파라미터로 해당 직무의 상세 데이터를 요청
-    const response = await fetch(`${sfRmApiBaseUrl}/careers/${careerId}`);
+    const response = await fetch(`${sfRmApiBaseUrl}/careers/${careerId}.json`);
 
     if (!response.ok) {
       throw new Error("직무 데이터를 찾을 수 없습니다.");
@@ -36,7 +31,7 @@ async function sfRmInitRoadmapCard() {
     sfRmRenderRoadmap(roadmapBox, career);
   } catch (error) {
     console.error(error);
-    roadmapBox.innerHTML = `<p class="sf-rm-status-text">로드맵 정보를 불러오지 못했습니다.<br />json-server가 켜져 있는지 확인해주세요.</p>`;
+    roadmapBox.innerHTML = `<p class="sf-rm-status-text">로드맵 정보를 불러오지 못했습니다.<br />잠시 후 다시 시도해주세요.</p>`;
   }
 }
 

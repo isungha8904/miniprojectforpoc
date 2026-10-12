@@ -1,0 +1,38 @@
+[
+  {
+    "id": "admin",
+    "title": "Admin",
+    "oneliner": "비즈니스와 IT를 매끄럽게 잇는 내부 혁신가",
+    "tags": [
+      "No-Code",
+      "비즈니스 분석"
+    ]
+  },
+  {
+    "id": "dev",
+    "title": "Developer",
+    "oneliner": "코드로 시스템의 한계를 돌파하는 기술 전문가",
+    "tags": [
+      "Apex/LWC",
+      "시스템 통합"
+    ]
+  },
+  {
+    "id": "consultant",
+    "title": "Consultant",
+    "oneliner": "최적의 디지털 전환 로드맵을 그리는 비즈니스 가이드",
+    "tags": [
+      "DX 컨설팅",
+      "아키텍처"
+    ]
+  },
+  {
+    "id": "pu",
+    "title": "Power User",
+    "oneliner": "시스템을 무기로 현장의 성과를 이끄는 핵심 실무자",
+    "tags": [
+      "성과 창출",
+      "변화 관리"
+    ]
+  }
+]

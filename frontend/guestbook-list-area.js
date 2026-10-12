@@ -1,12 +1,12 @@
-// json-server가 떠 있는 로컬 서버 주소
+// 방명록 API 주소 — 로컬에서는 json-server, 배포 환경에서는 Vercel Function(/api)을 사용
 const glIsLocalhost =
   window.location.hostname === "localhost" ||
   window.location.hostname === "127.0.0.1";
 const GB_API = glIsLocalhost
   ? "http://localhost:3000"
-  : "https://miniproject-ijxt.onrender.com";
+  : "/api";
 
-// 현재 화면에 렌더링된 댓글 목록 (삭제 시 비밀번호 대조용으로 보관)
+// 현재 화면에 렌더링된 댓글 목록
 let sfGbComments = [];
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -78,22 +78,13 @@ async function sfGbSubmitComment(data) {
   const apiUrl = `${GB_API}/comments`;
 
   try {
-    // 1. 기존 댓글 목록을 조회해서 현재 마지막 id 값을 확인
-    const listResponse = await fetch(apiUrl);
-    const comments = await listResponse.json();
-
-    // 2. 목록이 비어있으면 1, 아니면 (가장 큰 id + 1)을 새 id로 사용
-    const maxId = comments.reduce(
-      (max, comment) => Math.max(max, comment.id),
-      0,
-    );
+    // 1. id는 서버가 정하므로 보내지 않음 (배포 환경에서는 작성일도 서버 기준으로 다시 정해짐)
     const newComment = {
-      id: maxId + 1,
       ...data,
       created_at: new Date().toISOString().slice(0, 10), // YYYY-MM-DD 형식의 오늘 날짜
     };
 
-    // 3. 새 댓글 데이터를 서버(db.json)에 등록
+    // 2. 새 댓글 데이터를 서버에 등록
     const postResponse = await fetch(apiUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -113,18 +104,17 @@ async function sfGbSubmitComment(data) {
     await sfGbRenderList();
   } catch (error) {
     console.error(error);
-    alert(
-      "등록 중 오류가 발생했습니다. json-server가 켜져 있는지 확인해주세요.",
-    );
+    alert("등록 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
   }
 }
 
-// 방명록 하단 — db.json의 comments를 가져와 작성일 기준 내림차순(최신순)으로 렌더링
+// 방명록 하단 — 서버의 comments를 가져와 작성일 기준 내림차순(최신순)으로 렌더링
 async function sfGbRenderList() {
   const listArea = document.querySelector(".guestbook-list-area");
 
   try {
     const response = await fetch(`${GB_API}/comments`);
+    if (!response.ok) throw new Error("방명록 목록 조회에 실패했습니다.");
     const comments = await response.json();
 
     // created_at이 최신인 댓글이 맨 위로 오도록 내림차순 정렬
@@ -152,20 +142,29 @@ async function sfGbRenderList() {
               </button>
             </div>
             <div class="sf-gb-item-header">
-              <span class="sf-gb-item-author">${comment.author}</span>
+              <span class="sf-gb-item-author">${sfGbEscapeHtml(comment.author)}</span>
               <span class="sf-gb-item-date">${comment.created_at}</span>
             </div>
-            <p class="sf-gb-item-content">${comment.content}</p>
+            <p class="sf-gb-item-content">${sfGbEscapeHtml(comment.content)}</p>
           </div>
         `,
       )
       .join("");
   } catch (error) {
     console.error(error);
-    alert(
-      "방명록 목록을 불러오지 못했습니다. json-server가 켜져 있는지 확인해주세요.",
-    );
+    // 첫 화면에서 경고창이 뜨지 않도록 목록 자리에 안내 문구만 표시
+    listArea.innerHTML = `<p class="sf-gb-item-content">방명록을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.</p>`;
   }
+}
+
+// 방문자가 입력한 글에 HTML 태그가 섞여 있어도 글자 그대로 보이도록 특수문자를 바꿔 주는 함수
+function sfGbEscapeHtml(text) {
+  return String(text)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 // 리스트 영역 클릭 이벤트 위임 — 쓰레기통 아이콘 / 팝오버 확인 버튼 처리
@@ -214,7 +213,7 @@ function sfGbCloseAllPopovers() {
   });
 }
 
-// 팝오버 확인 버튼 → 비밀번호 대조 후 삭제
+// 팝오버 확인 버튼 → 비밀번호와 함께 서버에 삭제 요청
 async function sfGbHandleDeleteConfirm(commentId) {
   const popover = document.getElementById(`sf-gb-popover-${commentId}`);
   const passwordInput = popover.querySelector(".sf-gb-popover-input");
@@ -227,8 +226,15 @@ async function sfGbHandleDeleteConfirm(commentId) {
 
   const targetComment = sfGbComments.find((c) => String(c.id) === String(id));
 
+  if (!targetComment) {
+    alert("댓글을 찾을 수 없습니다.");
+    return;
+  }
+
+  // 로컬 json-server는 비밀번호를 검사하지 못하므로 화면에서 대조
+  // (배포 환경에서는 목록에 비밀번호가 내려오지 않아 이 검사를 건너뛰고 서버가 대조함)
   if (
-    !targetComment ||
+    targetComment.password !== undefined &&
     String(targetComment.password) !== String(passwordInput.value)
   ) {
     alert("비밀번호가 일치하지 않습니다.");
@@ -238,15 +244,21 @@ async function sfGbHandleDeleteConfirm(commentId) {
   try {
     const response = await fetch(`${GB_API}/comments/${id}`, {
       method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password: passwordInput.value }),
     });
+
+    // 403은 서버가 비밀번호 불일치로 삭제를 거절했다는 뜻
+    if (response.status === 403) {
+      alert("비밀번호가 일치하지 않습니다.");
+      return;
+    }
     if (!response.ok) throw new Error("삭제에 실패했습니다.");
 
     document.getElementById(`sf-gb-item-${id}`).remove();
     sfGbComments = sfGbComments.filter((c) => c.id !== id);
   } catch (error) {
     console.error(error);
-    alert(
-      "삭제 중 오류가 발생했습니다. json-server가 켜져 있는지 확인해주세요.",
-    );
+    alert("삭제 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
   }
 }

@@ -1,10 +1,13 @@
-// json-server가 떠 있는 로컬 서버 주소
+// 구독자 등록 API 주소 — 로컬에서는 json-server, 배포 환경에서는 Vercel Function(/api)을 사용
 const fcIsLocalhost =
   window.location.hostname === "localhost" ||
   window.location.hostname === "127.0.0.1";
 const API = fcIsLocalhost
   ? "http://localhost:3000"
-  : "https://miniproject-ijxt.onrender.com";
+  : "/api";
+
+// 직무 상세 데이터는 frontend/data 폴더의 JSON 파일에서 바로 읽어옴
+const SF_FORM_DATA_BASE = "./data";
 
 // 이메일 발송을 담당하는 Google Apps Script 배포 URL
 const SCRIPT_URL =
@@ -95,25 +98,15 @@ async function sfFormSubmitData(data) {
   const apiUrl = `${API}/subscribers`;
 
   try {
-    // 1. 기존 구독자 목록을 조회해서 현재 마지막 id 값을 확인
-    const listResponse = await fetch(apiUrl);
-    const subscribers = await listResponse.json();
-
-    // 2. 목록이 비어있으면 1, 아니면 (가장 큰 id + 1)을 새 id로 사용
-    const maxId = subscribers.reduce(
-      (max, subscriber) => Math.max(max, subscriber.id),
-      0,
-    );
-    const newSubscriber = {
-      id: maxId + 1,
-      ...data,
-    };
+    // 1. id는 서버가 정하므로 보내지 않음
+    //    (다른 신청자의 이메일이 노출되지 않도록 구독자 목록은 조회하지 않음)
+    const newSubscriber = { ...data };
 
     alert("신청이 완료되었습니다! 이메일 발송 예정입니다.");
 
-    // 4. 관심 직무의 상세 정보(설명, 역량, 자격증, 채용 공고)를 db.json에서 조회
+    // 4. 관심 직무의 상세 정보(설명, 역량, 자격증, 채용 공고)를 조회
     const careerResponse = await fetch(
-      `${API}/careers/${data.interested_career}`,
+      `${SF_FORM_DATA_BASE}/careers/${data.interested_career}.json`,
     );
     const career = await careerResponse.json();
 
@@ -133,7 +126,7 @@ async function sfFormSubmitData(data) {
       mode: "no-cors", // 응답은 못 읽지만 요청은 정상 실행됨
     });
 
-    // 3. 새 구독자 데이터를 서버(db.json)에 등록
+    // 3. 새 구독자 데이터를 서버에 등록
     const postResponse = await fetch(apiUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -145,8 +138,6 @@ async function sfFormSubmitData(data) {
     }
   } catch (error) {
     console.error(error);
-    alert(
-      "신청 중 오류가 발생했습니다. json-server가 켜져 있는지 확인해주세요.",
-    );
+    alert("신청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
   }
 }

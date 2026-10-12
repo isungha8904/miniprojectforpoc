@@ -1,0 +1,101 @@
+{
+  "id": "admin",
+  "title": "어드민 / 비즈니스 애널리스트 (Admin / Business Analyst)",
+  "description": "비즈니스 현업의 언어를 IT 기술의 언어로 번역하고, 기업이 세일즈포스 솔루션을 100% 활용해 실질적인 ROI를 낼 수 있도록 돕는 시스템의 설계자이자 관리자입니다. 비즈니스 요구사항 분석(PI 컨설팅), 데이터 아키텍처 및 철저한 보안 관리, 선언적(No-Code/Low-Code) 자동화 구현 및 기술 부채 관리, 사용자 채택 주도 및 체인지 매니지먼트 역할을 수행합니다.",
+  "skills": [
+    "세일즈포스 플랫폼 종합 이해도",
+    "비즈니스 프로세스 이해도",
+    "업무용 툴 활용 및 문서 작업 역량 (제안, 발표, 교육)",
+    "Salesforce Flow Builder 자동화 구현",
+    "데이터 품질 관리 (Data Hygiene) 및 Data Loader 활용",
+    "동적 보고서(Report) 및 대시보드(Dashboard) 시각화 기획력"
+  ],
+  "certifications": [
+    "Administrator (ADX-201 / ADM-201)",
+    "Advanced Administrator (ADX-211 / ADM-211)",
+    "Platform App Builder (DEX-403)",
+    "Business Analyst"
+  ],
+  "job_postings": [
+    {
+      "company": "솔로몬텍",
+      "actual_title": "Salesforce Consultant / Admin",
+      "summary": "비즈니스 요구사항을 세일즈포스 기능으로 구성하고, Flow 자동화 및 권한 체계를 관리하여 전사 생산성을 혁신합니다.",
+      "logo_url": "/frontend/assets/icons/01_cloudtech.svg",
+      "link": "https://www.wanted.co.kr/wd/178166",
+      "city": "서울",
+      "expYears": "경력무관",
+      "daysAgo": "오늘 등록"
+    },
+    {
+      "company": "쿠팡",
+      "actual_title": "세일즈포스 어드민 및 개발운영",
+      "summary": "데이터 정제, 리포트/대시보드 생성 및 현업 부서의 세일즈포스 활용을 지원하고 체인지 매니지먼트를 주도합니다.",
+      "logo_url": "/frontend/assets/icons/02_nexusai.svg",
+      "link": "https://www.wanted.co.kr/wd/261169",
+      "city": "서울",
+      "expYears": "경력 1~3년",
+      "daysAgo": "3일전"
+    },
+    {
+      "company": "위대한 상상(요기요)",
+      "actual_title": "Salesforce Admin",
+      "summary": "현업 페인 포인트를 분석하여 To-Be 프로세스를 설계하고, No-Code 도구를 결합하여 최적의 오퍼레이션을 구축합니다.",
+      "logo_url": "/frontend/assets/icons/03_securebit.svg",
+      "link": "https://www.wanted.co.kr/wd/22072",
+      "city": "서울",
+      "expYears": "경력 2년",
+      "daysAgo": "7일전"
+    },
+    {
+      "company": "콘센트릭스서비스코리아",
+      "actual_title": "Salesforce 개발/Admin",
+      "summary": "전사 보안 모델 설계, 유저 권한 관리, 데이터 위생 관리 및 파트너 앱(AppExchange) 도입 검토를 전담합니다.",
+      "logo_url": "/frontend/assets/icons/04_blockchainx.svg",
+      "link": "https://www.wanted.co.kr/wd/291622",
+      "city": "서울",
+      "expYears": "경력 3~5년",
+      "daysAgo": "1일전"
+    },
+    {
+      "company": "넥스트웨이브 커머스 (NextWave Commerce)",
+      "actual_title": "Salesforce Business Analyst",
+      "summary": "비즈니스 성장 단계에 맞춘 요구사항을 분석하여 To-Be 프로세스를 수립하고, 선언적(No-Code) 기능을 결합해 최적의 오퍼레이션을 구축합니다.",
+      "logo_url": "/frontend/assets/icons/05_velocitysaas.svg",
+      "link": "https://www.wanted.co.kr/wd/178166",
+      "city": "서울",
+      "expYears": "경력무관",
+      "daysAgo": "5일전"
+    },
+    {
+      "company": "핀테크랩 큐브 (FinTechLab Cube)",
+      "actual_title": "세일즈포스 시스템 관리자 (Admin)",
+      "summary": "플랫폼의 보안 모델 설계 및 복잡한 사용자 권한 체계를 관리하며, 데이터 무결성 유지와 파트너 앱(AppExchange) 도입 검토를 전담합니다.",
+      "logo_url": "/frontend/assets/icons/06_quantumlabs.svg",
+      "link": "https://www.wanted.co.kr/wd/178166",
+      "city": "서울",
+      "expYears": "경력 4~7년",
+      "daysAgo": "2일전"
+    },
+    {
+      "company": "글로벌 링크스 (Global Links)",
+      "actual_title": "Salesforce 어드민 및 데이터 분석가",
+      "summary": "영업 및 마케팅 부서의 세일즈포스 활용을 돕는 체인지 매니지먼트를 주도하고, 동적 리포트와 대시보드를 시각화하여 데이터 기반 의사결정을 지원합니다.",
+      "logo_url": "/frontend/assets/icons/07_infinitedata.svg",
+      "link": "https://www.wanted.co.kr/wd/178166",
+      "city": "서울",
+      "expYears": "경력 1년",
+      "daysAgo": "9일전"
+    },
+    {
+      "company": "클라우드브릿지 솔루션 (CloudBridge Solutions)",
+      "actual_title": "세일즈포스 컨설턴트 / Admin",
+      "summary": "다양한 도메인의 비즈니스 요구사항을 세일즈포스 플랫폼 기능으로 구현하며, Salesforce Flow Builder를 통한 정교한 프로세스 자동화를 구축합니다.",
+      "logo_url": "/frontend/assets/icons/08_devopsloop.svg",
+      "link": "https://www.wanted.co.kr/wd/178166",
+      "city": "서울",
+      "expYears": "경력 2~5년",
+      "daysAgo": "4일전"
+    }
+  ]
+}

@@ -1,9 +1,9 @@
 // ============================================================
 // job-postings.js — 채용 공고 슬라이더 컴포넌트 (접두사: sf-jp-)
-// json-server의 /careers/:id 에서 job_postings 배열을 가져와 슬라이더 카드 렌더링
+// data/careers/:id.json 에서 job_postings 배열을 가져와 슬라이더 카드 렌더링
 // ============================================================
 
-const SF_JP_API_BASE = 'http://localhost:3000';
+const SF_JP_API_BASE = './data';
 const SF_JP_LOGO_BASE = './assets/icons/';
 
 // 슬라이더 상수·상태
@@ -23,12 +23,12 @@ function sfJpGetCareerId() {
 
 
 // ----------------------------------------------------------
-// 2. 데이터 패칭 — json-server에서 채용 공고 목록 가져오기
+// 2. 데이터 패칭 — 정적 JSON 파일에서 채용 공고 목록 가져오기
 // ----------------------------------------------------------
 
 async function sfJpFetchPostings(careerId) {
   try {
-    const response = await fetch(`${SF_JP_API_BASE}/careers/${careerId}`);
+    const response = await fetch(`${SF_JP_API_BASE}/careers/${careerId}.json`);
     if (!response.ok) throw new Error(`서버 응답 오류: ${response.status}`);
     const careerData = await response.json();
     return careerData.job_postings || [];

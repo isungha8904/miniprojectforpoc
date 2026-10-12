@@ -1,10 +1,5 @@
-// json-server가 떠 있는 로컬 서버 주소 (직무 마스코트 일러스트 영역 전용)
-const jiIsLocalhost =
-  window.location.hostname === "localhost" ||
-  window.location.hostname === "127.0.0.1";
-const sfJiApiBaseUrl = jiIsLocalhost
-  ? "http://localhost:3000"
-  : "https://miniproject-ijxt.onrender.com";
+// 직무 카드·직무 상세처럼 바뀌지 않는 데이터는 frontend/data 폴더의 JSON 파일에서 바로 읽어옴
+const sfJiApiBaseUrl = "./data";
 
 // 직무 id별 마스코트 이미지 파일명 매핑
 // (assets/images 폴더 안의 파일명에 직무가 그대로 들어있어 id 기준으로 연결)
@@ -34,7 +29,7 @@ async function sfJiInitJobIllust() {
 
   try {
     // 이미지의 대체 텍스트(alt)에 사용할 직무 타이틀을 서버에서 조회
-    const response = await fetch(`${sfJiApiBaseUrl}/careers/${careerId}`);
+    const response = await fetch(`${sfJiApiBaseUrl}/careers/${careerId}.json`);
 
     if (!response.ok) {
       throw new Error("직무 데이터를 찾을 수 없습니다.");

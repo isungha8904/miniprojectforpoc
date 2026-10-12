@@ -1,10 +1,5 @@
-// json-server가 떠 있는 로컬 서버 주소
-const jcIsLocalhost =
-  window.location.hostname === "localhost" ||
-  window.location.hostname === "127.0.0.1";
-const JOB_API = jcIsLocalhost
-  ? "http://localhost:3000"
-  : "https://miniproject-ijxt.onrender.com";
+// 직무 카드·직무 상세처럼 바뀌지 않는 데이터는 frontend/data 폴더의 JSON 파일에서 바로 읽어옴
+const JOB_API = "./data";
 
 // 직무 id별 캐릭터 이미지 경로
 const sfJcImageMap = {
@@ -18,10 +13,10 @@ document.addEventListener("DOMContentLoaded", () => {
   sfJcRenderCards();
 });
 
-// db.json의 cards 데이터를 가져와 각 직무 카드(.job-card-box)에 채워 넣는 함수
+// data/cards.json의 cards 데이터를 가져와 각 직무 카드(.job-card-box)에 채워 넣는 함수
 async function sfJcRenderCards() {
   try {
-    const response = await fetch(`${JOB_API}/cards`);
+    const response = await fetch(`${JOB_API}/cards.json`);
     const cards = await response.json();
 
     // id(admin/dev/consultant/pu)가 같은 HTML 박스를 찾아 내용을 채움
@@ -45,7 +40,7 @@ async function sfJcRenderCards() {
   } catch (error) {
     console.error(error);
     alert(
-      "직무 카드 정보를 불러오지 못했습니다. json-server가 켜져 있는지 확인해주세요.",
+      "직무 카드 정보를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.",
     );
   }
 }

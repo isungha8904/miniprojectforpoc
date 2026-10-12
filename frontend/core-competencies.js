@@ -1,13 +1,8 @@
 // ===== 핵심 역량 스텟 카드 – 데이터 연동 및 인터랙션 로직 =====
 // 접두사 규칙: 함수명/변수명 앞에 'cc' (core-competencies) 접두사 사용
 
-// json-server로 띄운 가상 REST API 서버 주소 (README 기준 포트 3000)
-const ccIsLocalhost =
-  window.location.hostname === "localhost" ||
-  window.location.hostname === "127.0.0.1";
-const CC_API_BASE = ccIsLocalhost
-  ? "http://localhost:3000"
-  : "https://miniproject-ijxt.onrender.com";
+// 직무 카드·직무 상세처럼 바뀌지 않는 데이터는 frontend/data 폴더의 JSON 파일에서 바로 읽어옴
+const CC_API_BASE = "./data";
 
 // 체크리스트 전체 항목 수. 직무 데이터를 받아오기 전까지의 기본값이며,
 // 실제 값은 ccRenderChecklist()에서 받아온 skills 배열 길이로 갱신됨
@@ -29,13 +24,13 @@ function ccGetSelectedJobId() {
 }
 
 /**
- * db.json의 careers 데이터 중 현재 직무(jobId)에 해당하는 항목을 서버에서 받아오는 함수
- * - json-server는 리소스에 id 필드가 있으면 "/리소스명/id값"으로 단건 조회를 지원함
- *   (예: GET http://localhost:3000/careers/dev)
+ * careers 데이터 중 현재 직무(jobId)에 해당하는 JSON 파일을 받아오는 함수
+ * - 직무마다 data/careers 폴더에 "직무id.json" 파일이 하나씩 있음
+ *   (예: GET ./data/careers/dev.json)
  * - 직무가 바뀔 때마다 이 함수를 새 jobId로 다시 호출해서 skills(핵심 역량 목록)만 꺼내 씀
  */
 async function ccFetchCareerSkills(jobId) {
-  const response = await fetch(`${CC_API_BASE}/careers/${jobId}`);
+  const response = await fetch(`${CC_API_BASE}/careers/${jobId}.json`);
 
   // 응답이 실패(존재하지 않는 직무 id, 서버 다운 등)하면 에러를 던져서 호출부에서 처리하게 함
   if (!response.ok) {
@@ -128,7 +123,7 @@ function ccUpdate() {
 /**
  * 컴포넌트 초기화 함수
  * 1) URL에서 현재 선택된 직무 id를 확인
- * 2) 그 직무의 역량(skills) 데이터를 json-server(db.json)에서 fetch
+ * 2) 그 직무의 역량(skills) 데이터를 JSON 파일에서 fetch
  * 3) 받아온 데이터로 체크리스트를 그리고, 결과 섹션(차트/문구)도 초기 상태로 갱신
  * - 직무 선택이 바뀌면(= 사이드바에서 다른 직무를 눌러 job 쿼리스트링이 바뀐 채로 페이지가 열리면)
  *   이 초기화 함수가 다시 실행되면서 새 직무의 데이터로 전체가 갱신됨
@@ -141,13 +136,13 @@ async function ccInit() {
     ccRenderChecklist(skills);
     ccUpdate(); // 전부 미선택 상태 기준으로 차트/문구 초기화
   } catch (error) {
-    // json-server가 꺼져 있거나, 존재하지 않는 직무 id로 접근한 경우를 대비한 안내 문구
+    // 파일을 받아오지 못했거나, 존재하지 않는 직무 id로 접근한 경우를 대비한 안내 문구
     console.error(
       "[core-competencies] 역량 데이터를 불러오지 못했습니다:",
       error,
     );
     document.getElementById("cc-stat-list").innerHTML =
-      '<div class="stat-item"><span class="item-text">역량 데이터를 불러오지 못했어요. json-server(포트 3000)가 실행 중인지 확인해주세요.</span></div>';
+      '<div class="stat-item"><span class="item-text">역량 데이터를 불러오지 못했어요. 잠시 후 다시 시도해주세요.</span></div>';
   }
 }
 

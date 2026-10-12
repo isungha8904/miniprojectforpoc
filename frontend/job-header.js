@@ -1,10 +1,5 @@
-// json-server가 떠 있는 로컬 서버 주소 (직무 헤더 텍스트 영역 전용)
-const isLocalhost =
-  window.location.hostname === "localhost" ||
-  window.location.hostname === "127.0.0.1";
-const sfJhApiBaseUrl = isLocalhost
-  ? "http://localhost:3000"
-  : "https://miniproject-ijxt.onrender.com";
+// 직무 카드·직무 상세처럼 바뀌지 않는 데이터는 frontend/data 폴더의 JSON 파일에서 바로 읽어옴
+const sfJhApiBaseUrl = "./data";
 
 document.addEventListener("DOMContentLoaded", () => {
   sfJhInitJobHeader();
@@ -27,21 +22,23 @@ async function sfJhInitJobHeader() {
   try {
     // 태그는 cards 데이터, 타이틀/핵심 역량은 careers 데이터에 나뉘어 있어 두 번 요청
     const [cardResponse, careerResponse] = await Promise.all([
-      fetch(`${sfJhApiBaseUrl}/cards/${careerId}`),
-      fetch(`${sfJhApiBaseUrl}/careers/${careerId}`),
+      fetch(`${sfJhApiBaseUrl}/cards.json`),
+      fetch(`${sfJhApiBaseUrl}/careers/${careerId}.json`),
     ]);
 
     if (!cardResponse.ok || !careerResponse.ok) {
       throw new Error("직무 데이터를 찾을 수 없습니다.");
     }
 
-    const card = await cardResponse.json();
+    // cards.json은 전체 직무 카드 배열이므로 현재 직무 id와 같은 카드 하나를 찾음
+    const cards = await cardResponse.json();
+    const card = cards.find((item) => item.id === careerId) || {};
     const career = await careerResponse.json();
 
     sfJhRenderJobHeader(headerTextArea, card, career);
   } catch (error) {
     console.error(error);
-    headerTextArea.innerHTML = `<p class="sf-jh-check-text">직무 정보를 불러오지 못했습니다.<br />json-server가 켜져 있는지 확인해주세요.</p>`;
+    headerTextArea.innerHTML = `<p class="sf-jh-check-text">직무 정보를 불러오지 못했습니다.<br />잠시 후 다시 시도해주세요.</p>`;
   }
 }
 
