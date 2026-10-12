@@ -15,3 +15,5 @@ Thumbs.db
 
 # 클로드 로컬 설정
 .claude/settings.local.json
+.vercel
+.env*
